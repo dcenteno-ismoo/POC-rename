@@ -1,0 +1,15 @@
+Zenith Paper Co.
+Cebu City
+TIN 123-456-789-000
+TAX INVOICE
+Bill To:
+Greenfield Retail Corp.
+Mandaluyong City
+Invoice Dt.: 13.06.2025
+Doc No. INV-50615
+Due Date: 13.07.2025
+Description | Qty | Unit Price | Amount
+Cotton fabric (m) | 10 | ₱1,008.15 | ₱10,081.50
+Dried mangoes | 7 | ₱462.72 | ₱3,239.04
+Steel rebar 10mm | 23 | ₱3,821.35 | ₱87,891.05
+TOTAL: ₱101,211.59

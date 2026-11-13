@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QuickStart Prototype</title>
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #f4f7fb; --panel: #ffffff; --ink: #1f2a37; --muted: #64748b; --line: #dbe3ee;
+    --accent: #2f6fdb; --accent-ink: #ffffff; --ok: #1a7f4b; --ok-bg: #e3f6ec;
+    --warn: #8a5a00; --warn-bg: #fff4d6; --bad: #b42318; --bad-bg: #fde8e6; --chip: #e9f0fa;
+    --mono: ui-monospace, "Cascadia Mono", Consolas, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 14px/1.5 "Segoe UI", system-ui, -apple-system, Roboto, sans-serif; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 16px 60px; }
+  header { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  h1 { font-size: 20px; margin: 0; letter-spacing: -0.2px; }
+  h1 span { color: var(--muted); font-weight: 400; }
+  .rule { color: var(--muted); font-size: 13px; }
+  .rule code { font-family: var(--mono); background: var(--chip); padding: 1px 6px; border-radius: 4px; color: var(--ink); }
+
+  .drop { display: block; margin-top: 18px; border: 1.5px dashed var(--line); border-radius: 12px; background: var(--panel);
+          padding: 34px 16px; text-align: center; cursor: pointer; transition: border-color .15s, background .15s; }
+  .drop:hover, .drop.over { border-color: var(--accent); }
+  .drop strong { font-size: 15px; }
+  .drop p { margin: 6px 0 0; color: var(--muted); font-size: 13px; }
+  input[type=file] { display: none; }
+
+  .bar { display: flex; gap: 10px; align-items: center; margin: 16px 0 10px; flex-wrap: wrap; }
+  .bar .count { color: var(--muted); margin-right: auto; }
+  button, .btn { font: inherit; border: 1px solid var(--line); background: var(--panel); color: var(--ink);
+                 padding: 7px 14px; border-radius: 8px; cursor: pointer; text-decoration: none; }
+  button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
+  button:disabled { opacity: .5; cursor: default; }
+
+  .tablebox { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; min-width: 1000px; }
+  th { text-align: left; font-weight: 600; font-size: 12px; color: var(--muted); text-transform: uppercase;
+       letter-spacing: .4px; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr.row { cursor: pointer; }
+  tr.row:hover td { background: color-mix(in srgb, var(--chip) 50%, transparent); }
+  tr:last-child td { border-bottom: 0; }
+  .orig { max-width: 220px; overflow-wrap: anywhere; }
+  .new { font-family: var(--mono); font-weight: 600; }
+  .new a { color: var(--accent); text-decoration: none; }
+  .new a:hover { text-decoration: underline; }
+  .sub { color: var(--muted); font-size: 12px; }
+  .new .sub { font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif; font-weight: 400; }
+  .code { font-family: var(--mono); background: var(--chip); padding: 1px 6px; border-radius: 4px; font-weight: 600; }
+  .pill { display: inline-block; font-size: 12px; padding: 1px 9px; border-radius: 99px; white-space: nowrap; }
+  .pill.queued { background: var(--chip); color: var(--muted); }
+  .pill.working { background: var(--chip); color: var(--accent); }
+  .pill.ready { background: var(--chip); color: var(--accent); }
+  .pill.renamed { background: var(--ok-bg); color: var(--ok); }
+  .pill.exception { background: var(--bad-bg); color: var(--bad); }
+  .summary { display: none; gap: 12px; margin: 0 0 10px; }
+  .summary.show { display: flex; flex-wrap: wrap; }
+  .summary div { padding: 10px 16px; border-radius: 10px; font-weight: 600; }
+  .summary .s-ok { background: var(--ok-bg); color: var(--ok); }
+  .summary .s-bad { background: var(--bad-bg); color: var(--bad); }
+  .summary .s-note { background: var(--chip); color: var(--muted); font-weight: 400; }
+  .bad { color: var(--bad); font-weight: 600; }
+  .cat { display: inline-block; font-size: 12.5px; font-weight: 600; padding: 1px 9px; border-radius: 6px; background: var(--chip); color: var(--accent); }
+  .warn { color: var(--warn); font-size: 12px; }
+  .detail td { background: color-mix(in srgb, var(--chip) 35%, transparent); font-size: 13px; }
+  .detail dl { display: grid; grid-template-columns: 130px 1fr; gap: 4px 14px; margin: 0; }
+  .detail dt { color: var(--muted); }
+  .detail dd { margin: 0; overflow-wrap: anywhere; }
+  .detail pre { font-family: var(--mono); font-size: 12px; margin: 6px 0 0; max-height: 220px; overflow: auto;
+                background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; white-space: pre-wrap; }
+  mark { background: var(--warn-bg); color: inherit; padding: 0 2px; border-radius: 3px; }
+  .empty { padding: 26px; text-align: center; color: var(--muted); }
+  footer { margin-top: 14px; color: var(--muted); font-size: 12px; }
+  .spin { display: inline-block; width: 10px; height: 10px; border: 2px solid currentColor; border-right-color: transparent;
+          border-radius: 50%; animation: s .7s linear infinite; vertical-align: -1px; margin-right: 5px; }
+  @keyframes s { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>QuickStart Prototype</h1>
+  </header>
+
+  <label class="drop" id="drop">
+    <input type="file" id="pick" multiple>
+    <strong>Drop files here, or click to choose</strong>
+    <p>PDF · scans · photos (JPG, PNG, HEIC) · Word · Excel · PowerPoint · RTF · ODT · TXT · CSV · HTML · EML</p>
+  </label>
+
+  <div class="bar">
+    <span class="count" id="count">No files yet</span>
+    <button id="clear">Clear</button>
+    <button class="primary" id="go" disabled>Proceed with Renaming</button>
+  </div>
+
+  <div class="summary" id="summary"></div>
+
+  <div class="tablebox">
+    <table>
+      <thead><tr>
+        <th style="width:100px">Status</th><th>Original file</th><th>New name</th>
+        <th>Category</th><th>Client (lookup sheet)</th><th>Date</th><th style="width:110px">Read via</th>
+      </tr></thead>
+      <tbody id="rows"><tr><td colspan="7" class="empty">Files you add are read right away and all details appear here. Nothing is renamed until you press Proceed with Renaming. Originals are never changed.</td></tr></tbody>
+    </table>
+  </div>
+  <footer id="info"></footer>
+</div>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let items = [];      // {file, state, result, open}
+let batch = null;
+let running = false;
+
+fetch("/api/info").then(r => r.json()).then(i => {
+  $("#info").innerHTML = `Renamed copies are saved in <code>${esc(i.out_dir)}</code> · `
+    + (i.lookup_found ? `lookup sheet <code>${esc(i.lookup_file)}</code> (${i.registry.length} clients)` : `<b>lookup sheet not found</b> <code>${esc(i.lookup_file)}</code>`)
+    + (i.lookup_problem ? ` · <b>${esc(i.lookup_problem)}</b>` : "")
+    + ` · slash dates read as ${i.date_order === "MDY" ? "MM/DD" : "DD/MM"} · `
+    + `LibreOffice ${i.libreoffice ? "found" : "<b>not found</b> (DOC/RTF/ODT will fail)"}`;
+});
+
+let analyzing = false, done_ = false;
+
+function reset() { items = []; batch = null; done_ = false; render(); }
+
+function add(files) {
+  if (running) return;
+  if (done_) reset();                       // a finished batch starts over with new files
+  for (const f of files) items.push({ file: f, state: "queued", result: null, open: false });
+  render(); analyze();
+}
+
+// Every file is read as soon as it is added, and all the details are shown. Nothing is renamed yet.
+async function analyze() {
+  if (analyzing) return;
+  analyzing = true;
+  try {
+    if (!batch) batch = (await (await fetch("/api/batch", { method: "POST" })).json()).batch;
+    for (const it of items.filter(i => i.state === "queued")) {
+      it.state = "working"; render();
+      const fd = new FormData(); fd.append("file", it.file, it.file.name);
+      try {
+        const r = await fetch(`/api/batch/${batch}/file`, { method: "POST", body: fd });
+        it.result = await r.json();
+        it.state = r.ok ? it.result.status : "exception";
+        if (!r.ok) it.result = { error: it.result.detail || r.statusText, reason: "The app could not process this file", warnings: [] };
+        for (const nm of (it.result.held_with || [])) {      // a name clash holds back the earlier file too
+          const other = items.find(x => x.result && x.result.original_name === nm && x.state === "ready");
+          if (other) { other.state = "exception"; other.result.new_name = null; other.result.reason = `Same new name as ${it.result.original_name}: ${String(it.result.reason).split(': ').pop()}`; }
+        }
+      } catch (e) { it.state = "exception"; it.result = { error: String(e), reason: "The app could not be reached", warnings: [] }; }
+      render();
+    }
+  } finally { analyzing = false; render(); }
+}
+
+const drop = $("#drop");
+drop.addEventListener("dragover", e => { e.preventDefault(); drop.classList.add("over"); });
+drop.addEventListener("dragleave", () => drop.classList.remove("over"));
+drop.addEventListener("drop", e => { e.preventDefault(); drop.classList.remove("over"); add(e.dataTransfer.files); });
+$("#pick").addEventListener("change", e => { add(e.target.files); e.target.value = ""; });
+$("#clear").addEventListener("click", () => { if (!running && !analyzing) reset(); });
+
+// Proceed: rename for real (copies go to the out folder), then download everything as a ZIP.
+$("#go").addEventListener("click", async () => {
+  running = true; render();
+  try {
+    const r = await fetch(`/api/batch/${batch}/proceed`, { method: "POST" });
+    if (!r.ok) throw new Error((await r.json()).detail || r.statusText);
+    const results = await r.json();
+    for (const res of results) {
+      const it = items.find(x => x.result && x.result.upload_id === res.upload_id);
+      if (it) { it.result = res; it.state = res.status; }
+    }
+    done_ = true;
+    for (const res of results.filter(x => x.status === "renamed")) {      // download each file as is
+      const a = document.createElement("a");
+      a.href = `/api/batch/${batch}/file/${encodeURIComponent(res.new_name)}`; a.download = res.new_name;
+      document.body.appendChild(a); a.click(); a.remove();
+      await new Promise(r => setTimeout(r, 350));
+    }
+  } catch (e) { alert("Could not rename: " + e.message); }
+  running = false; render();
+});
+
+function statusPill(it) {
+  const label = { queued: "Queued", working: "Reading", ready: "Ready", renamed: "Renamed", exception: "Error" }[it.state];
+  return `<span class="pill ${it.state}">${it.state === "working" ? '<span class="spin"></span>' : ""}${label}</span>`;
+}
+
+function highlight(line, needle) {
+  if (!needle || !line) return esc(line);
+  const i = line.toLowerCase().indexOf(String(needle).toLowerCase());
+  if (i < 0) return esc(line);
+  return esc(line.slice(0, i)) + "<mark>" + esc(line.slice(i, i + needle.length)) + "</mark>" + esc(line.slice(i + needle.length));
+}
+
+const RULES = { lookup_code: "code printed on the document", lookup_name: "name on the document", lookup_fuzzy: "name on the document (approximate match)" };
+const chk = (label, v) => v === true ? `✓ ${label}` : v === false ? `<span class="bad">✗ ${label}</span>` : `– ${label}`;
+
+function render() {
+  const n = items.length, pend = items.filter(i => ["queued","working"].includes(i.state)).length;
+  const ready = items.filter(i => i.state === "ready").length, ok = items.filter(i => i.state === "renamed").length;
+  $("#count").textContent = !n ? "No files yet"
+    : running ? "Renaming…"
+    : pend ? `Reading ${n - pend + 1} of ${n}…`
+    : done_ ? `${ok} of ${n} renamed${ok < n ? ` · ${n - ok} not renamed (copied to review)` : ""} · saved in the out folder and downloaded as is`
+    : `${ready} of ${n} ready to rename${ready < n ? ` · ${n - ready} will show "Error renaming file"` : ""}`;
+  const bad = n - ok, sm = $("#summary");
+  sm.classList.toggle("show", done_ && !running);
+  if (done_) sm.innerHTML = `<div class="s-ok">✓ Done · ${ok} of ${n} renamed successfully</div>`
+    + (bad ? `<div class="s-bad">✗ ${bad} not renamed</div><div class="s-note">Not renamed files were copied to the review folder.</div>` : "");
+  $("#go").textContent = running ? "Renaming…" : done_ ? "Done ✓" : "Proceed with Renaming";
+  $("#go").disabled = running || analyzing || done_ || !n;
+  $("#clear").disabled = running;
+  if (!n) { $("#rows").innerHTML = `<tr><td colspan="7" class="empty">Files you add are read right away and all details appear here. Nothing is renamed until you press Proceed with Renaming. Originals are never changed.</td></tr>`; return; }
+
+  $("#rows").innerHTML = items.map((it, k) => {
+    const r = it.result || {};
+    const c = r.company, d = r.date, cat = r.category;
+    const pending = it.state === "queued" || it.state === "working";
+    const newName = r.new_name && it.state === "ready" ? `<b>${esc(r.new_name)}</b>`
+      : r.new_name
+      ? `<a href="/api/batch/${batch}/file/${encodeURIComponent(r.new_name)}" onclick="event.stopPropagation()">${esc(r.new_name)}</a>`
+      : pending ? `<span class="sub">—</span>`
+      : `<span class="bad">Error renaming file</span><div class="sub">${esc(r.reason || r.error || "")}</div>`;
+    const via = r.method ? `${r.method.includes("ocr") ? "OCR" : "Text"}${r.ocr_confidence != null ? ` · ${(r.ocr_confidence * 100).toFixed(0)}%` : ""}<div class="sub">${esc(r.detected_type || "")} · ${r.ms} ms</div>` : "";
+    const catCell = cat ? `<span class="cat">${esc(cat.name)}</span><div class="sub">found “${esc(cat.keyword)}”</div>`
+      : (r.status ? '<span class="sub">Uncategorized</span>' : "");
+    let html = `<tr class="row" data-k="${k}">
+      <td>${statusPill(it)}</td>
+      <td class="orig">${esc(it.file.name)}</td>
+      <td class="new">${newName}</td>
+      <td>${catCell}</td>
+      <td>${c ? `<span class="code">${esc(c.code)}</span> ${esc(c.name)}<div class="sub">${esc(RULES[c.rule] || c.rule)}</div>` : (r.status ? '<span class="sub">not found</span>' : "")}</td>
+      <td>${d ? `${esc(d.iso)}<div class="sub">“${esc(d.as_printed)}”${d.label ? ` · ${esc(d.label)}` : ""}</div>` : (r.status ? '<span class="sub">not found</span>' : "")}</td>
+      <td>${via}</td></tr>`;
+    if (it.open && it.result) {
+      const ck = r.checks;
+      html += `<tr class="detail"><td></td><td colspan="6"><dl>
+        ${r.reason && !r.new_name ? `<dt>Why not renamed</dt><dd class="bad">${esc(r.reason)}</dd>` : ""}
+        ${ck ? `<dt>Checks</dt><dd>${chk("Code format", ck.code_format)} &nbsp; ${chk("Found in lookup sheet", ck.found_in_lookup)} &nbsp; ${chk("Required fields (date)", ck.required_fields)}</dd>` : ""}
+        ${cat ? `<dt>Category evidence</dt><dd>line ${cat.line}: ${highlight(cat.evidence, cat.keyword)}</dd>` : ""}
+        ${c ? `<dt>Client evidence</dt><dd>line ${c.line}: ${highlight(c.evidence, c.rule === "lookup_code" ? c.code : c.name.split(" ")[0])}</dd>` : ""}
+        ${d ? `<dt>Date evidence</dt><dd>line ${d.line > 0 ? d.line : "header"}: ${highlight(d.evidence, d.as_printed)}</dd>` : ""}
+        ${r.already_processed ? `<dt>Record</dt><dd>already processed on ${esc(r.already_processed.on)} as ${esc(r.already_processed.as || "—")}</dd>` : ""}
+        ${(r.warnings || []).map(w => `<dt>Warning</dt><dd class="warn">${esc(w)}</dd>`).join("")}
+        ${r.error ? `<dt>Error</dt><dd class="warn">${esc(r.error)}</dd>` : ""}
+        ${r.text_preview?.length ? `<dt>Text read</dt><dd><pre>${esc(r.text_preview.join("\n"))}</pre></dd>` : ""}
+      </dl></td></tr>`;
+    }
+    return html;
+  }).join("");
+  document.querySelectorAll("tr.row").forEach(tr => tr.addEventListener("click", () => {
+    const it = items[+tr.dataset.k]; if (it.result) { it.open = !it.open; render(); }
+  }));
+}
+</script>
+</body>
+</html>

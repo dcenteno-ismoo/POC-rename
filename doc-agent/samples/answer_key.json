@@ -1,0 +1,242 @@
+{
+  "acct_notes.txt": {
+    "issuer": "Zenith Paper Co.",
+    "customer": "Greenfield Retail Corp.",
+    "code": "POZEN",
+    "date": "2025-06-13",
+    "date_as_printed": "13.06.2025",
+    "date_label": "Invoice Dt.",
+    "issuer_position": "header",
+    "expected_name": "POZEN_06132025.txt"
+  },
+  "README_vendor.md": {
+    "issuer": "Pacific Rim Builders Corp.",
+    "customer": "Summit Bakeshop Co.",
+    "code": "POPAC",
+    "date": "2026-01-25",
+    "date_as_printed": "25 Jan 2026",
+    "date_label": "Date",
+    "issuer_position": "labeled",
+    "expected_name": "POPAC_01252026.md"
+  },
+  "export_0931.csv": {
+    "issuer": "Sampaguita Foods Co.",
+    "customer": "Riverside Hardware Inc.",
+    "code": "POSAM",
+    "date": "2025-08-06",
+    "date_as_printed": "06.08.2025",
+    "date_label": "Date",
+    "issuer_position": "labeled",
+    "expected_name": "POSAM_08062025.csv"
+  },
+  "billing_page.html": {
+    "issuer": "Zenith Paper Co.",
+    "customer": "Lakeshore Medical Clinic",
+    "code": "POZEN",
+    "date": "2025-09-15",
+    "date_as_printed": "15-Sep-25",
+    "date_label": "Date",
+    "issuer_position": "header",
+    "expected_name": "POZEN_09152025.html"
+  },
+  "Fwd_ statement.eml": {
+    "issuer": "Pacific Rim Builders Corp.",
+    "customer": "Lakeshore Medical Clinic",
+    "code": "POPAC",
+    "date": "2025-06-06",
+    "date_as_printed": "6 Jun 2025",
+    "date_label": "OR Date",
+    "issuer_position": "header",
+    "expected_name": "POPAC_06062025.eml"
+  },
+  "SOA final FINAL.docx": {
+    "issuer": "Sampaguita Foods Co.",
+    "customer": "Riverside Hardware Inc.",
+    "code": "POSAM",
+    "date": "2026-03-10",
+    "date_as_printed": "2026-03-10",
+    "date_label": "Date",
+    "issuer_position": "header",
+    "expected_name": "POSAM_03102026.docx"
+  },
+  "invoice-copy.docx": {
+    "issuer": "Bluewave Logistics Corp.",
+    "customer": null,
+    "code": "POBLU",
+    "date": "2025-08-08",
+    "date_as_printed": "08-Aug-25",
+    "date_label": "Statement Date",
+    "issuer_position": "header",
+    "expected_name": "POBLU_08082025.docx"
+  },
+  "ledger_entry.xlsx": {
+    "issuer": "Kalayaan Steel Works, Inc.",
+    "customer": null,
+    "code": "POKAL",
+    "date": "2026-03-30",
+    "date_as_printed": "03/30/2026",
+    "date_label": "Date of Invoice",
+    "issuer_position": "header",
+    "expected_name": "POKAL_03302026.xlsx"
+  },
+  "q3 billing.xlsx": {
+    "issuer": "Orchid Lane Textiles",
+    "customer": "Tagaytay Highlands Resort",
+    "code": "POORC",
+    "date": "2025-07-14",
+    "date_as_printed": "14 Jul 2025",
+    "date_label": "Date",
+    "issuer_position": "header",
+    "expected_name": "POORC_07142025.xlsx"
+  },
+  "deck_summary.pptx": {
+    "issuer": "Macintosh Trading Inc.",
+    "customer": null,
+    "code": "POMAC",
+    "date": "2026-08-21",
+    "date_as_printed": "21-Aug-26",
+    "date_label": "Statement Date",
+    "issuer_position": "header",
+    "expected_name": "POMAC_08212026.pptx"
+  },
+  "scan0001.pdf": {
+    "issuer": "Bluewave Logistics Corp.",
+    "customer": null,
+    "code": "POBLU",
+    "date": "2025-10-19",
+    "date_as_printed": "2025-10-19",
+    "date_label": "Date",
+    "issuer_position": "header",
+    "expected_name": "POBLU_10192025.pdf"
+  },
+  "Invoice (2).pdf": {
+    "issuer": "Northstar Pharma Ltd.",
+    "customer": null,
+    "code": "PONOR",
+    "date": "2025-10-11",
+    "date_as_printed": "10/11/2025",
+    "date_label": "As of",
+    "issuer_position": "header",
+    "expected_name": "PONOR_10112025.pdf"
+  },
+  "receipt_digital.pdf": {
+    "issuer": "Pacific Rim Builders Corp.",
+    "customer": null,
+    "code": "POPAC",
+    "date": "2025-12-29",
+    "date_as_printed": "Dec. 29, 2025",
+    "date_label": "Date of Invoice",
+    "issuer_position": "footer",
+    "expected_name": "POPAC_12292025.pdf"
+  },
+  "SCAN_20251102.pdf": {
+    "issuer": "Orchid Lane Textiles",
+    "customer": "Lakeshore Medical Clinic",
+    "code": "POORC",
+    "date": "2026-02-13",
+    "date_as_printed": "13 Feb 2026",
+    "date_label": "Date",
+    "issuer_position": "labeled",
+    "expected_name": "POORC_02132026.pdf"
+  },
+  "scanned_po.pdf": {
+    "issuer": "Bluewave Logistics Corp.",
+    "customer": "Lakeshore Medical Clinic",
+    "code": "POBLU",
+    "date": "2026-03-23",
+    "date_as_printed": "03/23/2026",
+    "date_label": "Date",
+    "issuer_position": "labeled",
+    "expected_name": "POBLU_03232026.pdf"
+  },
+  "IMG_4471.jpg": {
+    "issuer": "Sampaguita Foods Co.",
+    "customer": "Summit Bakeshop Co.",
+    "code": "POSAM",
+    "date": "2025-10-08",
+    "date_as_printed": "8 Oct 2025",
+    "date_label": "Order Date",
+    "issuer_position": "header",
+    "expected_name": "POSAM_10082025.jpg"
+  },
+  "IMG_4472.jpg": {
+    "issuer": "Orchid Lane Textiles",
+    "customer": "Summit Bakeshop Co.",
+    "code": "POORC",
+    "date": "2025-07-27",
+    "date_as_printed": "27.07.2025",
+    "date_label": "Date of Invoice",
+    "issuer_position": "labeled",
+    "expected_name": "POORC_07272025.jpg"
+  },
+  "IMG_4480.JPG": {
+    "issuer": "Northstar Pharma Ltd.",
+    "customer": null,
+    "code": "PONOR",
+    "date": "2026-09-25",
+    "date_as_printed": "25 Sep 2026",
+    "date_label": "Invoice Dt.",
+    "issuer_position": "footer",
+    "expected_name": "PONOR_09252026.jpg"
+  },
+  "screenshot.png": {
+    "issuer": "Kalayaan Steel Works, Inc.",
+    "customer": null,
+    "code": "POKAL",
+    "date": "2026-04-04",
+    "date_as_printed": "4 Apr 2026",
+    "date_label": "Date",
+    "issuer_position": "footer",
+    "expected_name": "POKAL_04042026.png"
+  },
+  "phone_capture.heic": {
+    "issuer": "Zenith Paper Co.",
+    "customer": "Summit Bakeshop Co.",
+    "code": "POZEN",
+    "date": "2025-12-26",
+    "date_as_printed": "26-Dec-25",
+    "date_label": "Order Date",
+    "issuer_position": "header",
+    "expected_name": "POZEN_12262025.heic"
+  },
+  "old_memo.rtf": {
+    "issuer": "Macintosh Trading Inc.",
+    "customer": "Riverside Hardware Inc.",
+    "code": "POMAC",
+    "date": "2026-09-05",
+    "date_as_printed": "Sep. 5, 2026",
+    "date_label": "Date",
+    "issuer_position": "header",
+    "expected_name": "POMAC_09052026.rtf"
+  },
+  "contract_page.odt": {
+    "issuer": "Macintosh Trading Inc.",
+    "customer": "Riverside Hardware Inc.",
+    "code": "POMAC",
+    "date": "2025-06-10",
+    "date_as_printed": "10.06.2025",
+    "date_label": "OR Date",
+    "issuer_position": "header",
+    "expected_name": "POMAC_06102025.odt"
+  },
+  "legacy_invoice.doc": {
+    "issuer": "Kalayaan Steel Works, Inc.",
+    "customer": "Lakeshore Medical Clinic",
+    "code": "POKAL",
+    "date": "2026-03-07",
+    "date_as_printed": "March 7, 2026",
+    "date_label": "Date",
+    "issuer_position": "header",
+    "expected_name": "POKAL_03072026.doc"
+  },
+  "not_really_a.pdf": {
+    "issuer": "Northstar Pharma Ltd.",
+    "customer": null,
+    "code": "PONOR",
+    "date": "2026-06-02",
+    "date_as_printed": "02.06.2026",
+    "date_label": "Invoice Date",
+    "issuer_position": "labeled",
+    "expected_name": "PONOR_06022026.png"
+  }
+}
