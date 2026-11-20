@@ -14,8 +14,29 @@ from fastapi.responses import FileResponse, HTMLResponse, StreamingResponse
 
 from . import __version__, config
 from .pipeline import process_file
+from .ui import render_page
 
 app = FastAPI(title="doc-agent", version=__version__)
+from .training import router as training_router
+app.include_router(training_router)
+from .library_api import router as library_router, start_worker, stop as library_stop
+app.include_router(library_router)
+from .sources_api import router as sources_router
+app.include_router(sources_router)
+from .documents_api import router as documents_router
+app.include_router(documents_router)
+
+@app.on_event('startup')
+def library_startup():
+    start_worker()
+    from .sources_api import start_scanner
+    start_scanner()
+
+@app.on_event('shutdown')
+def library_shutdown():
+    library_stop.set()
+    from .sources_api import scan_stop
+    scan_stop.set()
 STATIC = Path(__file__).parent / "static"
 _uploads: dict[str, list[tuple[Path, str]]] = {}     # batch -> [(saved file, original name)]
 _preview: dict[str, dict[str, dict]] = {}
@@ -36,7 +57,27 @@ def _safe_name(name: str) -> str:
 
 @app.get("/", response_class=HTMLResponse)
 def index() -> str:
-    return (STATIC / "index.html").read_text(encoding="utf-8")
+    return render_page('renamer')
+
+
+@app.get('/assets/app.css')
+def shared_styles():
+    return FileResponse(STATIC/'app.css',media_type='text/css')
+
+
+@app.get('/assets/document-info.js')
+def document_info_script():
+    return FileResponse(STATIC/'document-info.js',media_type='application/javascript')
+
+
+@app.get('/assets/document-workspace.js')
+def document_workspace_script():
+    return FileResponse(STATIC/'document-workspace.js',media_type='application/javascript')
+
+
+@app.get('/assets/progress.js')
+def progress_script():
+    return FileResponse(STATIC / 'progress.js', media_type='application/javascript')
 
 
 @app.post("/api/batch")

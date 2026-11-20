@@ -1,0 +1,38 @@
+:root{--rich-ink:#203047;--rich-muted:#64748b;--rich-border:#dce4ed;--rich-accent:#2865a6;--rich-bg:#f3f6fa}
+body.rich-app{margin:0;padding:0;max-width:none;background:var(--rich-bg);color:var(--rich-ink);font:15px/1.5 "Segoe UI",system-ui,sans-serif}
+.rich-app *{box-sizing:border-box}.rich-app [hidden]{display:none!important}
+.rich-app .rich-header{display:block;width:100%;padding:0;margin:0;background:#fff;color:var(--rich-ink);border-bottom:1px solid var(--rich-border)}
+.rich-header-inner{max-width:1360px;margin:auto;padding:18px 24px 0}
+.rich-brand{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:16px}.rich-brand>a{font-size:22px;letter-spacing:-.5px;color:var(--rich-ink);text-decoration:none}.rich-brand>span{font-size:12px;color:var(--rich-muted)}.rich-brand .rich-beta{background:#e9f0fa;color:var(--rich-accent);padding:2px 9px;border-radius:20px}
+.rich-app .rich-nav{display:flex;align-items:stretch;gap:8px;margin:0;overflow-x:auto;flex-wrap:nowrap}
+.rich-app .rich-nav a{display:block;white-space:nowrap;padding:10px 14px 13px;border-bottom:3px solid transparent;color:#52647a;text-decoration:none;font-size:14px;font-weight:600;border-radius:6px 6px 0 0}
+.rich-app .rich-nav a:hover{background:#f5f8fc;color:var(--rich-accent)}.rich-app .rich-nav a[aria-current=page]{border-bottom-color:var(--rich-accent);color:var(--rich-accent);background:#edf4fc}
+.rich-app .rich-content{max-width:1360px;margin:0 auto;padding:26px 24px 48px}
+.rich-app .rich-page-heading{display:block;background:none;border:0;border-radius:0;margin:0 0 24px;padding:0}
+.rich-app .rich-page-heading h1{margin:0 0 5px;font-size:26px;line-height:1.25;letter-spacing:-.5px;font-weight:650}
+.rich-app .rich-page-heading p{margin:0;color:var(--rich-muted);font-size:14px}
+.rich-app .wrap{max-width:none;margin:0;padding:0}.rich-app main{max-width:none;margin:0;padding:0}.rich-app .layout{max-width:none;margin:0}
+.rich-app :is(button,input,select,textarea){font-family:inherit;font-size:14px;border-color:#cbd5e1;border-radius:7px}
+.rich-app button{min-height:38px;padding:8px 14px;transition:background .15s,border-color .15s}.rich-app button:not(:disabled):hover{border-color:#94a3b8}.rich-app button.primary{background:var(--rich-accent);border-color:var(--rich-accent);color:#fff}.rich-app button:disabled{cursor:default;opacity:.5}
+.rich-app :is(button,a,input,select,textarea):focus-visible{outline:3px solid #93c5fd;outline-offset:2px}
+.rich-app :is(input,select){min-height:38px}.rich-app input[type=checkbox]{min-height:auto;accent-color:var(--rich-accent)}
+.rich-app :is(.panel,.card){border-color:var(--rich-border);border-radius:10px;box-shadow:0 1px 2px #20304705}
+.rich-app h2{font-size:18px}.rich-app .muted{color:var(--rich-muted)}
+.rich-app.rich-assistant main{padding:0 0 0 24px}.rich-app.rich-assistant aside{padding:0 18px 0 0}.rich-app.rich-assistant #messages{background:#edf2f8;border-radius:10px}
+.rich-app #scan-workspace{max-width:none!important;margin:20px 0!important}
+.rich-skip{position:absolute;left:12px;top:-100px;background:#fff;padding:10px;z-index:10}.rich-skip:focus{top:8px}
+@media(max-width:700px){.rich-header-inner{padding:16px 14px 0}.rich-app .rich-content{padding:20px 14px 32px}.rich-brand{gap:10px}.rich-brand>span:not(.rich-beta){width:100%}.rich-app .rich-nav{gap:0}.rich-app .rich-nav a{padding:10px 11px}.rich-app.rich-assistant main{padding:0}.rich-app.rich-assistant aside{padding:0 0 16px}.rich-app .rich-page-heading h1{font-size:23px}}
+
+.spreadsheet-preview{max-width:100%;max-height:440px;overflow:auto;border:1px solid #dce4ed;border-radius:6px;margin-bottom:16px}
+.spreadsheet-preview table{border-collapse:separate;border-spacing:0;min-width:100%;font-size:13px}
+.spreadsheet-preview th,.spreadsheet-preview td{padding:7px 10px;border-right:1px solid #dce4ed;border-bottom:1px solid #dce4ed;min-width:80px;max-width:350px;white-space:pre-wrap;overflow-wrap:anywhere;vertical-align:top}
+.spreadsheet-preview th{background:#edf2f7;font-weight:600;text-align:left}
+.spreadsheet-preview thead th{position:sticky;top:0}
+.spreadsheet-preview td pre{margin:0;background:transparent;white-space:pre-wrap;tab-size:4}
+
+.rich-documents details.panel>summary{font-size:16px;font-weight:600;cursor:pointer}
+.rich-documents #document-activity>label{display:inline-flex;flex-direction:row;gap:6px;margin:10px}
+.rich-documents #reference-activity{border-top:1px solid var(--rich-border);padding-top:14px;margin-top:16px}
+.rich-documents #detail fieldset{min-width:0;margin:12px 0;border:1px solid var(--rich-border);border-radius:8px}
+.rich-documents #detail form label{margin:8px 0}
+.rich-documents #detail form input,.rich-documents #detail form select{width:100%;padding:8px}

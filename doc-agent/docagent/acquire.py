@@ -5,9 +5,13 @@ import csv
 import email
 import email.policy
 import io
+import re
+import hashlib
+import json
+import uuid
 import subprocess
 import tempfile
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from datetime import date, datetime
 from html.parser import HTMLParser
 from pathlib import Path
@@ -25,6 +29,7 @@ class Page:
     lines: list[str]
     method: str                 # direct | native | pdf_text | ocr
     confidence: float = 1.0
+    location: dict = field(default_factory=dict)
 
 
 @dataclass
@@ -201,13 +206,28 @@ def _docx(path: Path, rec: Record) -> None:
 
 def _xlsx(path: Path, rec: Record) -> None:
     import openpyxl
-    wb = openpyxl.load_workbook(str(path), data_only=True, read_only=True)
-    for ws in wb.worksheets:
-        rows = [[_cell(v) for v in r] for r in ws.iter_rows(values_only=True)]
-        lines = [ln for r in rows if (ln := _row_line(r))]
-        if lines:
-            rec.pages.append(Page(_clean(lines), "native"))
-    wb.close()
+    # File object also supports extensionless stored uploads. Macros are never run.
+    with path.open('rb') as source:
+        wb = openpyxl.load_workbook(source, data_only=True, read_only=True)
+        try:
+            for ws in wb.worksheets:
+                for row in ws.iter_rows():
+                    values=[]
+                    coordinates=[]
+                    for cell in row:
+                        value=cell.value
+                        if value is None: continue
+                        text=_cell(value)
+                        # Excel identifiers may be numeric cells formatted as 000000.
+                        if isinstance(value,(int,float)) and not isinstance(value,bool) and float(value).is_integer() and re.fullmatch(r'0+',cell.number_format or ''):
+                            text=str(int(value)).zfill(len(cell.number_format))
+                        values.append(text)
+                        coordinates.append(cell.coordinate)
+                    line=_row_line(values)
+                    if line:
+                        rec.pages.append(Page(_clean([line]), 'native', location={'sheet':ws.title,'cells':coordinates}))
+        finally:
+            wb.close()
 
 
 def _pptx(path: Path, rec: Record) -> None:
@@ -242,16 +262,21 @@ def _to_pdf_with_libreoffice(path: Path, workdir: Path) -> Path:
 
 # ---------------------------------------------------------------- path D / E
 def _pdf(path: Path, rec: Record) -> None:
-    doc = pymupdf.open(str(path))
-    for page in doc:
-        text = page.get_text("text", sort=True)
-        if len(text.strip()) > config.PDF_TEXT_MIN_CHARS:
-            rec.pages.append(Page(_clean(text.splitlines()), "pdf_text"))
-            continue
-        pix = page.get_pixmap(dpi=config.RENDER_DPI)
-        img = Image.frombytes("RGB" if pix.n < 4 else "RGBA", (pix.width, pix.height), pix.samples)
-        _image(img, rec)
-    doc.close()
+    # Reject clearly truncated files before passing them to the native parser.
+    with path.open('rb') as probe:
+        if probe.read(5)!=b'%PDF-':raise ValueError('Invalid PDF header')
+        probe.seek(0,2);size=probe.tell();probe.seek(max(0,size-16384))
+        if b'%%EOF' not in probe.read():raise ValueError('PDF is incomplete or corrupted (missing end-of-file marker)')
+    with pymupdf.open(str(path)) as doc:
+        for page in doc:
+            text = page.get_text("text", sort=True)
+            if len(text.strip()) > config.PDF_TEXT_MIN_CHARS:
+                rec.pages.append(Page(_clean(text.splitlines()), "pdf_text", location={"page": page.number + 1}))
+                continue
+            pix = page.get_pixmap(dpi=config.RENDER_DPI)
+            img = Image.frombytes("RGB" if pix.n < 4 else "RGBA", (pix.width, pix.height), pix.samples)
+            _image(img, rec)
+            rec.pages[-1].location = {"page": page.number + 1}
 
 
 def _image(img: Image.Image, rec: Record) -> None:
@@ -274,6 +299,31 @@ def _open_image(path: Path) -> Image.Image:
 
 # ---------------------------------------------------------------- entry
 def acquire(path: Path, det: Detected) -> Record:
+    """Shared versioned cache for renaming, training and library processing."""
+    digest = hashlib.sha256()
+    with path.open('rb') as source:
+        while chunk := source.read(1 << 20):
+            digest.update(chunk)
+    cache = config.WORK_DIR / 'ocr-cache-v3'
+    cache.mkdir(parents=True, exist_ok=True)
+    target = cache / (digest.hexdigest() + '-' + det.ext + '.json')
+    if target.exists():
+        try:
+            data = json.loads(target.read_text('utf-8'))
+            return Record(pages=[Page(**p) for p in data['pages']], meta=data['meta'], warnings=data['warnings'])
+        except (ValueError, KeyError, TypeError):
+            pass  # A damaged cache can always be rebuilt from the unchanged original.
+    rec = _acquire(path, det)
+    temporary = cache / (uuid.uuid4().hex + '.tmp')
+    try:
+        temporary.write_text(json.dumps(asdict(rec)), encoding='utf-8')
+        temporary.replace(target)
+    finally:
+        temporary.unlink(missing_ok=True)
+    return rec
+
+
+def _acquire(path: Path, det: Detected) -> Record:
     rec = Record()
     if det.path == "A":
         _path_a(path, det.ext, rec)

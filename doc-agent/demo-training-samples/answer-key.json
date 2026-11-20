@@ -1,0 +1,209 @@
+{
+  "01-rfq.pdf": {
+    "document_type": "RFQ",
+    "primary_reference": "RFQ-2026-0142",
+    "issuer_candidate": "RESCON ENGINEERING",
+    "demo_only": true
+  },
+  "02-purchase-order.pdf": {
+    "document_type": "PO",
+    "primary_reference": "PO-2026-0088",
+    "issuer_candidate": "RESCON ENGINEERING",
+    "demo_only": true
+  },
+  "03-purchase-requisition.pdf": {
+    "document_type": "PR",
+    "primary_reference": "PR-000321",
+    "issuer_candidate": "RESCON ENGINEERING",
+    "demo_only": true
+  },
+  "04-design-document.pdf": {
+    "document_type": "DESIGN_DOCUMENT",
+    "primary_reference": "ME-GA-0012",
+    "issuer_candidate": "ABC DESIGN SERVICES",
+    "demo_only": true
+  },
+  "05-bill-of-materials.pdf": {
+    "document_type": "BOM",
+    "primary_reference": "BOM-0042",
+    "issuer_candidate": "RESCON ENGINEERING",
+    "demo_only": true
+  },
+  "06-quotation.pdf": {
+    "document_type": "QUOTATION",
+    "primary_reference": "QTN-2026-0912",
+    "issuer_candidate": "ABC INDUSTRIAL SUPPLY",
+    "demo_only": true
+  },
+  "07-invoice.pdf": {
+    "document_type": "Invoice",
+    "primary_reference": "INV-000045",
+    "issuer_candidate": "ABC INDUSTRIAL SUPPLY",
+    "demo_only": true
+  },
+  "09-unknown.pdf": {
+    "document_type": "Unknown",
+    "primary_reference": null,
+    "issuer_candidate": null,
+    "demo_only": true
+  },
+  "08-mixed-rfq-and-quotation.pdf": {
+    "document_type": "Mixed document",
+    "segments": [
+      {
+        "page": 1,
+        "type": "RFQ",
+        "reference": "RFQ-2026-0142"
+      },
+      {
+        "page": 2,
+        "type": "QUOTATION",
+        "reference": "QTN-2026-0912"
+      }
+    ],
+    "demo_only": true
+  },
+  "01-rfq.xlsx": {
+    "document_type": "RFQ",
+    "primary_reference": "RFQ-2026-0142",
+    "issuer_candidate": "RESCON ENGINEERING",
+    "demo_only": true,
+    "format": "xlsx"
+  },
+  "01-rfq.png": {
+    "document_type": "RFQ",
+    "primary_reference": "RFQ-2026-0142",
+    "issuer_candidate": "RESCON ENGINEERING",
+    "demo_only": true,
+    "format": "png"
+  },
+  "02-purchase-order.xlsx": {
+    "document_type": "PO",
+    "primary_reference": "PO-2026-0088",
+    "issuer_candidate": "RESCON ENGINEERING",
+    "demo_only": true,
+    "format": "xlsx"
+  },
+  "02-purchase-order.png": {
+    "document_type": "PO",
+    "primary_reference": "PO-2026-0088",
+    "issuer_candidate": "RESCON ENGINEERING",
+    "demo_only": true,
+    "format": "png"
+  },
+  "03-purchase-requisition.xlsx": {
+    "document_type": "PR",
+    "primary_reference": "PR-000321",
+    "issuer_candidate": "RESCON ENGINEERING",
+    "demo_only": true,
+    "format": "xlsx"
+  },
+  "03-purchase-requisition.png": {
+    "document_type": "PR",
+    "primary_reference": "PR-000321",
+    "issuer_candidate": "RESCON ENGINEERING",
+    "demo_only": true,
+    "format": "png"
+  },
+  "04-design-document.xlsx": {
+    "document_type": "DESIGN_DOCUMENT",
+    "primary_reference": "ME-GA-0012",
+    "issuer_candidate": "ABC DESIGN SERVICES",
+    "demo_only": true,
+    "format": "xlsx"
+  },
+  "04-design-document.png": {
+    "document_type": "DESIGN_DOCUMENT",
+    "primary_reference": "ME-GA-0012",
+    "issuer_candidate": "ABC DESIGN SERVICES",
+    "demo_only": true,
+    "format": "png"
+  },
+  "05-bill-of-materials.xlsx": {
+    "document_type": "BOM",
+    "primary_reference": "BOM-0042",
+    "issuer_candidate": "RESCON ENGINEERING",
+    "demo_only": true,
+    "format": "xlsx"
+  },
+  "05-bill-of-materials.png": {
+    "document_type": "BOM",
+    "primary_reference": "BOM-0042",
+    "issuer_candidate": "RESCON ENGINEERING",
+    "demo_only": true,
+    "format": "png"
+  },
+  "06-quotation.xlsx": {
+    "document_type": "QUOTATION",
+    "primary_reference": "QTN-2026-0912",
+    "issuer_candidate": "ABC INDUSTRIAL SUPPLY",
+    "demo_only": true,
+    "format": "xlsx"
+  },
+  "06-quotation.png": {
+    "document_type": "QUOTATION",
+    "primary_reference": "QTN-2026-0912",
+    "issuer_candidate": "ABC INDUSTRIAL SUPPLY",
+    "demo_only": true,
+    "format": "png"
+  },
+  "07-invoice.xlsx": {
+    "document_type": "Invoice",
+    "primary_reference": "INV-000045",
+    "issuer_candidate": "ABC INDUSTRIAL SUPPLY",
+    "demo_only": true,
+    "format": "xlsx"
+  },
+  "07-invoice.png": {
+    "document_type": "Invoice",
+    "primary_reference": "INV-000045",
+    "issuer_candidate": "ABC INDUSTRIAL SUPPLY",
+    "demo_only": true,
+    "format": "png"
+  },
+  "08-mixed-rfq-and-quotation.xlsx": {
+    "document_type": "Mixed document",
+    "segments": [
+      {
+        "page": 1,
+        "type": "RFQ",
+        "reference": "RFQ-2026-0142"
+      },
+      {
+        "page": 2,
+        "type": "QUOTATION",
+        "reference": "QTN-2026-0912"
+      }
+    ],
+    "demo_only": true,
+    "format": "xlsx"
+  },
+  "08-mixed-rfq-and-quotation-page-1.png": {
+    "document_type": "RFQ",
+    "primary_reference": "RFQ-2026-0142",
+    "demo_only": true,
+    "format": "png",
+    "mixed_pdf_page": 1
+  },
+  "08-mixed-rfq-and-quotation-page-2.png": {
+    "document_type": "QUOTATION",
+    "primary_reference": "QTN-2026-0912",
+    "demo_only": true,
+    "format": "png",
+    "mixed_pdf_page": 2
+  },
+  "09-unknown.xlsx": {
+    "document_type": "Unknown",
+    "primary_reference": null,
+    "issuer_candidate": null,
+    "demo_only": true,
+    "format": "xlsx"
+  },
+  "09-unknown.png": {
+    "document_type": "Unknown",
+    "primary_reference": null,
+    "issuer_candidate": null,
+    "demo_only": true,
+    "format": "png"
+  }
+}

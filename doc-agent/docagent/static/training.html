@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI beta training</title>
+<style>body{font:15px system-ui;background:#f4f7fb;color:#1f2a37;max-width:1000px;margin:32px auto;padding:16px}article{background:white;padding:20px;margin:16px 0;border:1px solid #dbe3ee;border-radius:12px}label{display:inline-block;margin:8px}input,select,button{font:inherit;padding:8px;max-width:100%}pre{white-space:pre-wrap;max-height:260px;overflow:auto}button{cursor:pointer}#status{white-space:pre-wrap}</style>
+<rich-assets>
+<rich-shell></rich-shell>
+<p>Build an approved example library. Review the suggested labels before saving. Documents stay on this computer; approving examples does not train a model yet.</p>
+<label>Upload documents <input id="files" type="file" multiple></label>
+<label>Upload folder <input id="folder" type="file" webkitdirectory multiple></label>
+<button id="refresh-files" type="button">Refresh saved files</button>
+<button id="clear-files" type="button">Clear from view (keep context)</button>
+<label><input id="show-archived" type="checkbox"> Show hidden / archived examples</label>
+<p>Review and save examples to Assistant context, check their processing status, then hide them when ready. Hidden records and context stay saved. This is searchable context, not model fine-tuning.</p>
+<p id="status" role="status"></p><div id="uploads"></div><main id="examples"></main>
+<script src="/assets/progress.js"></script>
+<script>
+const status=document.querySelector('#status'), list=document.querySelector('#examples');
+document.querySelector('#show-archived').onchange=()=>load().catch(e=>status.textContent=e.message);
+async function refreshFiles(){const button=document.querySelector('#refresh-files');button.disabled=true;const errors=[];let done=0;try{const rows=await request('/api/training');const view=DocProgress.meter(document.querySelector('#uploads'),'Refreshing saved Training files');const started=performance.now();view.update('Reading saved sources · Time left: estimating…');for(const row of rows){status.textContent='Refreshing '+row.source;try{await request('/api/training/'+row.id+'/refresh',{method:'POST'})}catch(e){errors.push(row.source+': '+e.message)}done++;const left=(performance.now()-started)/1000/done*(rows.length-done);view.update(done+'/'+rows.length+' files checked · '+Math.floor(done/rows.length*100)+'% · '+errors.length+' failed · Estimated time left: '+DocProgress.duration(left),done/rows.length*100)}if(!rows.length)view.update('No saved files to refresh',0);status.textContent=(done-errors.length)+' files refreshed. Approved labels preserved.'+(errors.length?'\n'+errors.join('\n'):'');await load()}catch(e){status.textContent=e.message}finally{button.disabled=false}}
+document.querySelector('#refresh-files').onclick=refreshFiles;
+document.querySelector('#clear-files').onclick=async()=>{try{const result=await request('/api/training/hide',{method:'POST'});document.querySelector('#uploads').replaceChildren();status.textContent=result.hidden+' entries hidden. Saved files and Assistant context are retained.';await load()}catch(e){status.textContent=e.message}};
+async function request(url,options){const r=await fetch(url,options);if(!r.ok){const e=await r.json();throw Error(e.detail||'Request failed')}return r.json()}
+async function load(){const rows=await request('/api/training?include_archived='+document.querySelector('#show-archived').checked);list.replaceChildren();if(!rows.length){const empty=document.createElement('p');empty.textContent='No active examples to review. Upload documents or show archived approved examples.';list.append(empty)}for(const row of rows){
+const card=document.createElement('article'),title=document.createElement('h2');title.textContent=row.source+(row.approved?' · Approved':' · Needs review');card.append(title);
+const memory=DocProgress.meter(card,'Assistant context');const context=row.context||{};memory.update(context.status||'Not saved',context.ready?100:context.status==='Not saved to Assistant context'?0:null);const stage=document.createElement('p');stage.textContent='File: saved locally · Review: '+(row.approved?'Approved':'Pending')+' · Assistant context: '+(context.ready?'Ready for retrieval (100%)':context.status||'Not saved');card.append(stage);if(context.error){const warning=document.createElement('p');warning.textContent='Processing note: '+context.error;card.append(warning)}const saveContext=document.createElement('button');saveContext.textContent=context.ready?'Saved to Assistant context':'Save / retry Assistant context';saveContext.disabled=!!context.ready;saveContext.onclick=async()=>{saveContext.disabled=true;memory.update('Saving file to Assistant context…');try{await request('/api/training/'+row.id+'/context',{method:'POST'});status.textContent='Source saved. Processing status updates automatically.';await load()}catch(e){memory.update('Save failed: '+e.message,0);saveContext.disabled=false}};card.append(saveContext);if(!row.archived){const hide=document.createElement('button');hide.textContent='Hide from view (keep context)';hide.onclick=async()=>{try{await request('/api/training/'+row.id+'/hide',{method:'POST'});await load()}catch(e){status.textContent=e.message}};card.append(hide)}
+if(row.archived){const note=document.createElement('p');note.textContent='Hidden from active view · Source retained';card.append(note);const restore=document.createElement('button');restore.textContent='Restore to active list';restore.onclick=async()=>{try{await request('/api/training/'+row.id+'/restore',{method:'POST'});await load()}catch(e){status.textContent=e.message}};card.append(restore)}
+if(row.refreshed_at){const note=document.createElement('p');note.textContent='Last refresh: '+new Date(row.refreshed_at).toLocaleString()+(row.refresh_error?' · '+row.refresh_error:'');card.append(note)}
+const details=document.createElement('details'),summary=document.createElement('summary'),text=document.createElement('pre');summary.textContent='Extracted document text';text.textContent=row.text;details.append(summary,text);card.append(details);
+const form=document.createElement('form');for(const key of ['company','reference_number','category','date']){const label=document.createElement('label');label.textContent=(key==='reference_number'?'Reference number':key)+' ';const input=document.createElement(key==='category'?'select':'input');input.name=key;input.required=key!=='reference_number';if(key==='date')input.type='date';if(key==='category')for(const value of ['','Request For Quotation','Purchase Order','Purchase Requisition','Invoice','Quotation','Design Document','Bill of Materials (BOM)','Mixed document','Unknown']){const option=document.createElement('option');option.value=value;option.textContent=value||'Choose category';input.append(option)}input.value=row.labels[key]||'';label.append(input);form.append(label)}
+const button=document.createElement('button');button.textContent='Save approved example';form.append(button);form.onsubmit=async e=>{e.preventDefault();button.disabled=true;try{await request('/api/training/'+row.id+'/approve',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.fromEntries(new FormData(form)))});status.textContent='Approved. Saving to Assistant context…';await request('/api/training/'+row.id+'/context',{method:'POST'});await load();status.textContent='Approved and saved to the Library queue. Status updates automatically; hide this entry when you are ready.'}catch(e){status.textContent=e.message;button.disabled=false}};card.append(form);list.append(card)}}
+async function upload(event){const files=Array.from(event.target.files),errors=[];let count=0,settled=0;const summary=DocProgress.meter(document.querySelector('#uploads'),'Training batch');summary.update('0/'+files.length+' files processed · 0% · Time left: estimating…',0);const started=performance.now();document.querySelector('#files').disabled=document.querySelector('#folder').disabled=true;try{for(const file of files){try{await DocProgress.upload('/api/training/ingest',file,document.querySelector('#uploads'));count++}catch(e){errors.push(file.name+': '+e.message)}settled++;const left=(performance.now()-started)/1000/settled*(files.length-settled);summary.update(settled+'/'+files.length+' files processed · '+Math.floor(settled/files.length*100)+'% · '+errors.length+' failed · Estimated batch time left: '+DocProgress.duration(left),settled/files.length*100);await load()}status.textContent=count+' files available in the active list (existing files restored; approval and context retained).'+(errors.length?'\n'+errors.join('\n'):'')}catch(e){status.textContent=e.message}finally{event.target.value='';document.querySelector('#files').disabled=document.querySelector('#folder').disabled=false}}
+document.querySelector('#files').onchange=upload;document.querySelector('#folder').onchange=upload;load().catch(e=>status.textContent=e.message);
+let polling=false;setInterval(async()=>{if(polling||document.querySelector('#files').disabled||document.activeElement?.closest('form'))return;polling=true;try{await load()}catch(e){status.textContent='Reconnecting: '+e.message}finally{polling=false}},4000);
+</script></html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

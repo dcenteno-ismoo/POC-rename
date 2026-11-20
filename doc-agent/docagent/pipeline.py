@@ -121,7 +121,7 @@ def process_file(src: Path, original_name: str, out_dir: Path, review_dir: Path,
                 r.warnings.append(f"also mentions: {', '.join(cat.also)}; "
                                   f"{'Proposal takes precedence' if cat.name == 'Request For Quotation' else 'used the one that appears first'}")
         else:
-            r.warnings.append("No category found (no Proposal, Purchase Order or Purchase Requisition text)")
+            r.warnings.append("No category found (no Invoice, Proposal, Purchase Order or Purchase Requisition text)")
 
         # ---- 3. Lookup sheet
         try:

@@ -53,7 +53,8 @@ def _looks_like_text(head: bytes) -> bool:
 def detect(path: Path, original_name: str | None = None) -> Detected:
     claimed = Path(original_name or path.name).suffix.lower().lstrip(".")
     claimed = CANON.get(claimed, claimed)
-    head = path.read_bytes()[:8192]
+    with path.open('rb') as stream:
+        head = stream.read(8192)
 
     kind = filetype.guess(head)
     ext, by = None, "bytes"

@@ -1,0 +1,11 @@
+﻿<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AI Assistant</title>
+<style>body{font:16px system-ui;max-width:900px;margin:40px auto;padding:20px;background:#f4f7fb;color:#1f2a37}nav{display:flex;gap:20px}article{padding:18px;background:white;border-radius:12px;margin:16px 0}input,button{font:inherit;padding:12px}input{width:70%}blockquote{white-space:pre-wrap}#status{color:#64748b}</style>
+<nav><a href="/">Renamer</a><a href="/training">AI Training</a><a href="/library">Document library</a></nav>
+<h1>AI Assistant <small>Beta</small></h1><p>Ask questions about processed documents. Each supported answer links to the original file.</p><p>Questions are independent; include the document, supplier, or part number in each question.</p>
+<form id="ask"><input id="question" required maxlength="2000" aria-label="Question" placeholder="What payment terms are stated in PO 000123?"><button>Ask</button></form><p id="status" role="status"></p><main id="answer"></main>
+<script>
+const form=document.querySelector('form'),status=document.querySelector('#status'),box=document.querySelector('#answer');
+function add(tag,text,parent){const e=document.createElement(tag);e.textContent=text;parent.append(e);return e}
+form.onsubmit=async event=>{event.preventDefault();form.querySelector('button').disabled=true;status.textContent='Looking for supporting evidence…';box.replaceChildren();try{const response=await fetch('/api/library-ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:document.querySelector('#question').value})});const result=await response.json();if(!response.ok)throw Error(result.detail||'Request failed');if(result.message)add('p',result.message,box);for(const claim of result.claims){const card=add('article','',box);add('p',claim.text,card);for(const ref of claim.references){const a=add('a',ref.filename+' · '+JSON.stringify(ref.location)+' · '+ref.review_status+' · Processing: '+ref.processing_status,card);a.href=ref.url;a.target='_blank';a.rel='noopener';add('blockquote',ref.excerpt,card)}}status.textContent=result.scope||''}catch(e){status.textContent=e.message}finally{form.querySelector('button').disabled=false}};
+</script></html>
+

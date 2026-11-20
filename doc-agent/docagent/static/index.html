@@ -81,10 +81,9 @@
 </style>
 </head>
 <body>
+<rich-assets>
+<rich-shell></rich-shell>
 <div class="wrap">
-  <header>
-    <h1>QuickStart Prototype</h1>
-  </header>
 
   <label class="drop" id="drop">
     <input type="file" id="pick" multiple>
@@ -112,6 +111,8 @@
   <footer id="info"></footer>
 </div>
 
+<div id="upload-progress"></div>
+<script src="/assets/progress.js"></script>
 <script>
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -148,10 +149,8 @@ async function analyze() {
       it.state = "working"; render();
       const fd = new FormData(); fd.append("file", it.file, it.file.name);
       try {
-        const r = await fetch(`/api/batch/${batch}/file`, { method: "POST", body: fd });
-        it.result = await r.json();
-        it.state = r.ok ? it.result.status : "exception";
-        if (!r.ok) it.result = { error: it.result.detail || r.statusText, reason: "The app could not process this file", warnings: [] };
+        it.result = await DocProgress.upload(`/api/batch/${batch}/file`, it.file, $("#upload-progress"));
+        it.state = it.result.status;
         for (const nm of (it.result.held_with || [])) {      // a name clash holds back the earlier file too
           const other = items.find(x => x.result && x.result.original_name === nm && x.state === "ready");
           if (other) { other.state = "exception"; other.result.new_name = null; other.result.reason = `Same new name as ${it.result.original_name}: ${String(it.result.reason).split(': ').pop()}`; }
@@ -266,3 +265,5 @@ function render() {
 </script>
 </body>
 </html>
+
+

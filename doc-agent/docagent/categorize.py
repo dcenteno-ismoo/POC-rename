@@ -16,6 +16,7 @@ import re
 from dataclasses import dataclass, field
 
 RULES: list[tuple[str, str, re.Pattern]] = [
+    ("Invoice", "Invoice", re.compile(r"\b(?:tax\s+|commercial\s+|sales\s+)?invoices?\b", re.I)),
     ("Request For Quotation", "Proposal", re.compile(r"\bproposals?\b", re.I)),
     ("Purchase Order", "Purchase Order", re.compile(r"\bpurchase\s*orders?\b", re.I)),
     ("Purchase Requisition", "Purchase Requisition", re.compile(r"\bpurchase\s*requisitions?\b", re.I)),
@@ -32,6 +33,11 @@ class Category:
 
 
 def find_category(lines: list[str]) -> Category | None:
+    from .references import heading_category
+    heading=heading_category(lines)
+    if heading:
+        name,index,text=heading
+        return Category(name,text,text,index)
     first: dict[str, tuple[int, int, str]] = {}       # category -> (line, column, line text)
     for i, ln in enumerate(lines):
         for name, _kw, rx in RULES:

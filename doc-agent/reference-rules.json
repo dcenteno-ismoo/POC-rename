@@ -1,0 +1,9 @@
+{"version":"1","rules":[
+{"id":"rfq.reference","category":"Request For Quotation","aliases":["Request for Quotation (RFQ)","RFQ"],"headings":["REQUEST FOR QUOTATION","REQUEST FOR QUOTE","RFQ"],"labels":["RFQ","Request for Quotation","Enquiry","Inquiry"],"prefixes":["RFQ"]},
+{"id":"po.reference","category":"Purchase Order","aliases":["Purchase Order (PO)","PO"],"headings":["PURCHASE ORDER","PO"],"labels":["PO","P.O.","Purchase Order","Order"],"prefixes":["PO"]},
+{"id":"pr.reference","category":"Purchase Requisition","aliases":["Purchase Requisition (PR)","PR"],"headings":["PURCHASE REQUISITION","PURCHASE REQUEST","REQUISITION FOR PURCHASE","PR"],"labels":["PR","P.R.","Purchase Requisition","Purchase Request","Requisition"],"prefixes":["PR"]},
+{"id":"invoice.reference","category":"Invoice","aliases":["INV"],"headings":["INVOICE","SALES INVOICE","TAX INVOICE","COMMERCIAL INVOICE"],"labels":["Invoice","INV","Sales Invoice","Tax Invoice"],"prefixes":["INV"]},
+{"id":"quotation.reference","category":"Quotation","aliases":["QUOTATION"],"headings":["QUOTATION","PRICE QUOTATION","SALES QUOTATION","QUOTE","PROPOSAL"],"labels":["Quotation","Quote","QT","QTN","Reference","Ref."],"prefixes":["QTN","QT"]},
+{"id":"design.reference","category":"Design Document","aliases":["DESIGN_DOCUMENT"],"headings":["ENGINEERING DRAWING","DESIGN SPECIFICATION","TECHNICAL SPECIFICATION","GENERAL ARRANGEMENT"],"labels":["Drawing","DWG","Specification","Document"],"prefixes":["DWG"]},
+{"id":"bom.reference","category":"Bill of Materials (BOM)","aliases":["BOM"],"headings":["BILL OF MATERIALS","BOM","MATERIAL LIST","PARTS LIST"],"labels":["BOM","Material List","Document"],"prefixes":["BOM"]}
+],"mixed_policy":"Extract references per segment; no combined code.","unknown_policy":"Leave references unassigned without an established category."}
